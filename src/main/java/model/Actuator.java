@@ -21,6 +21,14 @@ public class Actuator implements GreenHouseElement{
         this.isActive = isActive;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     @Override
     public void accept(GreenHouseVisitor v) {
         v.visit(this);
