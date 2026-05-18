@@ -1,4 +1,4 @@
-package model;
+package org.example.iotgreenhouse.model;
 
 public interface GreenHouseVisitor {
     void visit(TemperatureSensor sensors);

@@ -1,10 +1,10 @@
-package service;
+package org.example.iotgreenhouse.service;
 
-import model.Actuator;
-import model.GreenHouseVisitor;
-import model.HumiditySensor;
-import model.TemperatureSensor;
-import repository.ActuatorRepository;
+import org.example.iotgreenhouse.model.Actuator;
+import org.example.iotgreenhouse.model.GreenHouseVisitor;
+import org.example.iotgreenhouse.model.HumiditySensor;
+import org.example.iotgreenhouse.model.TemperatureSensor;
+import org.example.iotgreenhouse.repository.ActuatorRepository;
 
 public class AutomationControllerVisitor implements GreenHouseVisitor {
 

@@ -1,10 +1,12 @@
-package service;
+package org.example.iotgreenhouse.service;
 
-import model.Sensors;
+import org.example.iotgreenhouse.model.Sensors;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.ActuatorRepository;
-import repository.SensorsRepository;
+import org.example.iotgreenhouse.repository.ActuatorRepository;
+import org.example.iotgreenhouse.repository.SensorsRepository;
 
+@Service
 public class GreenHouseManagementService {
     private final SensorsRepository sensorsRepository;
     private final ActuatorRepository actuatorRepository;
