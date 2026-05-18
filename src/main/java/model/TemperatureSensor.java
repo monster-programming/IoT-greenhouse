@@ -1,7 +1,14 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "temperature_sensors")
 public class TemperatureSensor extends Sensors {
     private int tempVal;
+
+    protected TemperatureSensor() {}
     public TemperatureSensor(String id) {
         super(id);
     }
@@ -16,6 +23,6 @@ public class TemperatureSensor extends Sensors {
 
     @Override
     public void accept(GreenHouseVisitor v) {
-
+        v.visit(this);
     }
 }

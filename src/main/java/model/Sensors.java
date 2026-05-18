@@ -1,8 +1,15 @@
 package model;
 
-public abstract class Sensors implements GreenHouseElement {
-    private final String id;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "sensors")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Sensors implements GreenHouseElement {
+    @Id
+    private String id;
+
+    protected Sensors() {};
     public Sensors(String id) {
         this.id = id;
     }
