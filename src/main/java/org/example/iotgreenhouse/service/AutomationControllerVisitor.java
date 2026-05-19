@@ -1,10 +1,9 @@
 package org.example.iotgreenhouse.service;
 
-import org.example.iotgreenhouse.model.Actuator;
-import org.example.iotgreenhouse.model.GreenHouseVisitor;
-import org.example.iotgreenhouse.model.HumiditySensor;
-import org.example.iotgreenhouse.model.TemperatureSensor;
+import org.example.iotgreenhouse.model.*;
 import org.example.iotgreenhouse.repository.ActuatorRepository;
+
+import java.util.List;
 
 public class AutomationControllerVisitor implements GreenHouseVisitor {
 
@@ -18,19 +17,24 @@ public class AutomationControllerVisitor implements GreenHouseVisitor {
     public void visit(TemperatureSensor sensors) {
         System.out.println("Проверка температуры для " + sensors.getId() + ": " + sensors.getVal() + " C");
 
-        repository.findById("window_1").ifPresent(window -> {
-            if (sensors.getVal() > 30 && !window.isActive()) {
-                window.setActive(true);
-                repository.save(window);
-                System.out.println("[Action] Повышенная температура. Окна открыты.");
-            }
-            else if (sensors.getVal() < 22 && window.isActive()) {
-                window.setActive(false);
-                repository.save(window);
-                System.out.println("[Action] Низкая температура. Окна закрыты.");
-            }
+        Zone currZone = sensors.getZone();
 
-        });
+        List<Actuator> actuators = currZone.getActuators();
+
+        for(Actuator actuator : actuators) {
+            if (actuator.getType() == ActuatorType.WINDOW) {
+                if (sensors.getVal() > 30 && !actuator.isActive()) {
+                    actuator.setActive(true);
+                    repository.save(actuator);
+                    System.out.println("[Action] Повышенная температура в зоне " + currZone.getName() + ". " + "Открыто окно " + actuator.getId() + ".");
+                }
+                else if (sensors.getVal() < 22 && actuator.isActive()) {
+                    actuator.setActive(false);
+                    repository.save(actuator);
+                    System.out.println("[Action] Низкая температура в зоне " + currZone.getName() + "." + " Закрыто окно " + actuator.getId() + ".");
+                }
+            }
+        }
     }
 
     @Override

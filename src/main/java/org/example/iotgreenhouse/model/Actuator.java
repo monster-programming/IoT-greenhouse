@@ -13,6 +13,10 @@ public class Actuator implements GreenHouseElement{
 
     boolean isActive;
 
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
+
     protected Actuator() {}
 
     public Actuator(String id, ActuatorType type, boolean isActive) {
@@ -29,8 +33,34 @@ public class Actuator implements GreenHouseElement{
         isActive = active;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public ActuatorType getType() {
+        return type;
+    }
+
+    public void setType(ActuatorType type) {
+        this.type = type;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
+
     @Override
     public void accept(GreenHouseVisitor v) {
         v.visit(this);
     }
+
+
 }

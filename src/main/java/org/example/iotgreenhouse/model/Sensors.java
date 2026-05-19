@@ -11,6 +11,10 @@ public abstract class Sensors implements GreenHouseElement {
 
     private boolean isActive;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
+
     protected Sensors() {};
     public Sensors(String id) {
         this.id = id;
@@ -30,6 +34,14 @@ public abstract class Sensors implements GreenHouseElement {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
     @Override

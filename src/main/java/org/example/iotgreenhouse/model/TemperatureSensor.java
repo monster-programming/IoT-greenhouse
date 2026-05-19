@@ -8,7 +8,9 @@ import jakarta.persistence.Table;
 public class TemperatureSensor extends Sensors {
     private int tempVal;
 
-    protected TemperatureSensor() {}
+    protected TemperatureSensor() {
+        super();
+    }
     public TemperatureSensor(String id) {
         super(id);
     }
