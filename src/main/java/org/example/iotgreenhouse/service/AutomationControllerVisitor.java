@@ -19,7 +19,7 @@ public class AutomationControllerVisitor implements GreenHouseVisitor {
 
     @Override
     public void visit(TemperatureSensor sensors) {
-        System.out.println("Проверка температуры для " + sensors.getId() + ": " + sensors.getVal() + " C");
+        System.out.println("Проверка температуры для " + sensors.getId() + ": " + sensors.getVal() + "°C");
 
         Zone currZone = sensors.getZone();
 
@@ -34,7 +34,7 @@ public class AutomationControllerVisitor implements GreenHouseVisitor {
                     repository.save(actuator);
                     System.out.println("[Action] Повышенная температура в зоне " + currZone.getName() + ". " + "Открыто окно " + actuator.getId() + ".");
 
-                    String payload = String.format("{\"action\":\"OPEN\", \"zone\":\"%s\"}\"", currZone.getName());
+                    String payload = String.format("{\"action\":\"OPEN\",\"zone\":\"%s\"}", currZone.getName());
                     mqttGateway.sendToMqtt(payload, topic);
                     System.out.println("[MQTT] Отправлена команда OPEN в топик: " + topic);
                 }
@@ -43,7 +43,7 @@ public class AutomationControllerVisitor implements GreenHouseVisitor {
                     repository.save(actuator);
                     System.out.println("[Action] Низкая температура в зоне " + currZone.getName() + "." + " Закрыто окно " + actuator.getId() + ".");
 
-                    String payload = String.format("{\"action\":\"CLOSE\", \"zone\":\"%s\"}\"", currZone.getName());
+                    String payload = String.format("{\"action\":\"CLOSE\",\"zone\":\"%s\"}", currZone.getName());
                     mqttGateway.sendToMqtt(payload, topic);
                     System.out.println("[MQTT] Отправлена команда CLOSE в топик: " + topic);
                 }

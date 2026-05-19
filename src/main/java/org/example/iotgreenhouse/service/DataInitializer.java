@@ -46,7 +46,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (!sensorsRepository.existsById("temp_sensor_1")) {
-            TemperatureSensor temperatureSensor = new TemperatureSensor("temp_sensor_1", 25);
+            TemperatureSensor temperatureSensor = new TemperatureSensor("temp_sensor_1", 25.0);
             temperatureSensor.setZone(zoneAlpha);
             sensorsRepository.save(temperatureSensor);
             System.out.println("[База данных] Добавлен датчик " + temperatureSensor.getId() + " в зону " + zoneAlpha.getName());

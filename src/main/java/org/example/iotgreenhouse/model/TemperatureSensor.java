@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "temperature_sensors")
 public class TemperatureSensor extends Sensors {
-    private int tempVal;
+    private double tempVal;
 
     protected TemperatureSensor() {
         super();
@@ -15,16 +15,16 @@ public class TemperatureSensor extends Sensors {
         super(id);
     }
 
-    public TemperatureSensor(String id, int val) {
+    public TemperatureSensor(String id, double val) {
         super(id);
         tempVal = val;
     }
 
-    public int getVal() {
+    public double getVal() {
         return tempVal;
     }
 
-    public void setVal(int val) {
+    public void setVal(double val) {
         tempVal = val;
     }
 
