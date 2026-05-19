@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
+import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
 import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
+import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
@@ -21,6 +23,10 @@ public class MqttConfig {
     private final GreenHouseManagementService service;
     private final SensorsRepository sensorsRepository;
     private final ObjectMapper mapper;
+
+    private String URL = "tcp://localhost:1883";
+    private String CLIENT_ID = "spring-boot-iot-client";
+    private String TOPIC = "greenhouse/sensors";
 
     public MqttConfig(GreenHouseManagementService service, SensorsRepository sensorsRepository, ObjectMapper mapper) {
         this.service = service;
@@ -43,10 +49,12 @@ public class MqttConfig {
         return new DirectChannel();
     }
 
+    @Bean MessageChannel mqttOutputChannel() { return new DirectChannel(); }
+
     @Bean
     public MessageProducer inbound() {
         MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
-                "tcp://localhost:1883", "spring-boot-iot-client", "greenhouse/sensors");
+                URL, CLIENT_ID, TOPIC);
         adapter.setCompletionTimeout(5000);
         adapter.setCompletionTimeout(5000);
         adapter.setQos(1);
@@ -82,5 +90,21 @@ public class MqttConfig {
                 System.out.println("[MQTT] Ошибка парсинга: " + e.getMessage());
             }
         };
+    }
+
+    @Bean
+    @ServiceActivator(inputChannel = "mqttOutputChannel")
+    public MessageHandler mqttOutbound() {
+        DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
+        factory.setConnectionOptions(mqttConnectionOptions());
+
+        String PUBLISHER_CLIENT_ID = CLIENT_ID + "-publisher";
+
+        MqttPahoMessageHandler messageHandler = new MqttPahoMessageHandler(
+                PUBLISHER_CLIENT_ID, factory
+        );
+        messageHandler.setAsync(true);
+        messageHandler.setDefaultQos(1);
+        return messageHandler;
     }
 }
