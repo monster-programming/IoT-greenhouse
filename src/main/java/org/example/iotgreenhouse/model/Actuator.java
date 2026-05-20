@@ -1,5 +1,5 @@
 package org.example.iotgreenhouse.model;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +15,7 @@ public class Actuator implements GreenHouseElement{
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
+    @JsonIgnore
     private Zone zone;
 
     protected Actuator() {}

@@ -4,29 +4,29 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "humidity_sensors")
-public class HumiditySensor extends Sensors {
-    private double humVal;
+@Table(name = "light_sensors")
+public class LightSensor extends Sensors {
+    private double lightVal;
 
-    protected HumiditySensor() {
+    protected LightSensor() {
         super();
     }
 
-    public HumiditySensor(String id) {
+    public LightSensor(String id) {
         super(id);
     }
 
-    public HumiditySensor(String id, double val) {
+    public LightSensor(String id, double val) {
         super(id);
-        humVal = val;
+        lightVal = val;
     }
 
     public double getVal() {
-        return humVal;
+        return lightVal;
     }
 
     public void setVal(double val) {
-        humVal = val;
+        lightVal = val;
     }
 
     @Override

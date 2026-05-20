@@ -8,6 +8,7 @@ import org.example.iotgreenhouse.service.GreenHouseManagementService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.example.iotgreenhouse.model.*;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
 import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
@@ -69,7 +70,8 @@ public class MqttConfig {
     public MessageHandler handler() {
         return message -> {
             String payload = (String) message.getPayload();
-            System.out.println("[MQTT] Получено сообщение: " + payload);
+            // Закомментируем этот вывод, чтобы консоль не засорялась, мы будем видеть логи в Visitor
+            // System.out.println("[MQTT] Получено сообщение: " + payload);
 
             try {
                 SensorDataRequest request = mapper.readValue(payload, SensorDataRequest.class);
@@ -81,9 +83,25 @@ public class MqttConfig {
                         temperatureSensor.setVal(request.getVal());
                         service.handleIncomingSensorData(temperatureSensor);
                         sensorsRepository.save(temperatureSensor);
-                        System.out.println("[MQTT] Данные обновлены");
-                    } else {
-                        System.out.println("[MQTT] Неизвестный датчик: " + request.getId());
+                    }
+                }
+                else if ("HUMIDITY".equalsIgnoreCase(request.getType())) {
+                    HumiditySensor humiditySensor = (HumiditySensor) sensorsRepository.findById(request.getId()).orElse(null);
+
+                    if (humiditySensor != null) {
+                        humiditySensor.setVal(request.getVal());
+                        service.handleIncomingSensorData(humiditySensor);
+                        sensorsRepository.save(humiditySensor);
+                    }
+                }
+                else if ("LIGHT".equalsIgnoreCase(request.getType())) {
+                    LightSensor lightSensor = (LightSensor) sensorsRepository.findById(request.getId()).orElse(null);
+
+                    if (lightSensor != null) {
+                        // Приводим double к int, так как яркость у нас в целых процентах
+                        lightSensor.setVal(request.getVal());
+                        service.handleIncomingSensorData(lightSensor);
+                        sensorsRepository.save(lightSensor);
                     }
                 }
             } catch (Exception e) {
